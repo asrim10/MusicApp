@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "947494350643",
+    "firebase_url": "https://music-deeb5-default-rtdb.firebaseio.com",
+    "project_id": "music-deeb5",
+    "storage_bucket": "music-deeb5.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:947494350643:android:10629433a91ef8253d5846",
+        "android_client_info": {
+          "package_name": "com.example.musicapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCJZUAK0na_To5yT9HE2rQOdR2jezFz8r4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
