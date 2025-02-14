@@ -6,62 +6,91 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/white"
+    android:background="@drawable/music"
     tools:context=".ui.activity.LoginActivity">
 
-    <TextView
-        android:id="@+id/loginText"
-        android:layout_width="wrap_content"
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Login"
+        android:layout_margin="20dp"
         android:layout_gravity="center"
-        android:layout_marginTop="150dp"
-        android:textSize="50sp"
-        android:textStyle="bold"
-        android:fontFamily="monospace"/>
+        app:cardCornerRadius="16dp"
+        app:cardElevation="8dp"
+        android:background="@android:color/transparent"
+        app:cardBackgroundColor="@android:color/transparent">
 
-    <EditText
-        android:id="@+id/editEmail"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:layout_marginTop="20dp"
-        android:inputType="text"
-        android:hint="Enter email" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="100dp"
+            android:layout_marginBottom="100dp"
+            android:padding="24dp"
+            android:background="@android:color/transparent">
 
-    <EditText
-        android:id="@+id/editPassword"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:layout_marginTop="20dp"
-        android:inputType="textPassword"
-        android:hint="Enter Password" />
+            <TextView
+                android:id="@+id/loginText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="24dp"
+                android:fontFamily="monospace"
+                android:text="Login"
+                android:textSize="32sp"
+                android:textStyle="bold"
+                android:textColor="@android:color/white" />
 
-    <TextView
-        android:layout_gravity="end"
-        android:id="@+id/btnForget"
-        android:textColor="@android:color/holo_blue_dark"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="Forget Password?" />
+            <EditText
+                android:id="@+id/editEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:backgroundTint="@color/white"
+                android:ems="10"
+                android:hint="Enter email"
+                android:inputType="textEmailAddress"
+                android:textColor="@android:color/white" />
 
-    <Button
-        android:id="@+id/btnLogin"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:text="Login" />
+            <EditText
+                android:id="@+id/editPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:backgroundTint="@color/white"
+                android:ems="10"
+                android:hint="Enter Password"
+                android:inputType="textPassword"
+                android:textColor="@android:color/white"/>
 
-    <TextView
-        android:id="@+id/btnSignupnavigate"
-        android:layout_gravity="end"
-        android:textColor="@android:color/holo_blue_dark"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:text="Don't have an account? Click here" />
+            <TextView
+                android:id="@+id/btnForget"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginTop="8dp"
+                android:text="Forget Password?"
+                android:textColor="@android:color/holo_blue_light"
+                android:textSize="14sp" />
 
+            <Button
+                android:id="@+id/btnLogin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:backgroundTint="@android:color/transparent"
+                android:text="Login"
+                android:textColor="@android:color/white"
+                android:textStyle="bold" />
 
+            <TextView
+                android:id="@+id/btnSignupnavigate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="16dp"
+                android:text="Don't have an account? Click here"
+                android:textColor="@android:color/holo_blue_light"
+                android:textSize="14sp" />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
 </LinearLayout>
