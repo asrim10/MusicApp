@@ -5,6 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#1F2122"
     tools:context=".ui.activity.DashboardActivity">
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
@@ -16,6 +17,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        android:background="#1F2122"
         app:menu="@menu/navbar" />
 
     <FrameLayout
@@ -30,6 +32,19 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:id="@+id/dashImg1"
+            android:padding="10dp"
+            android:src="@drawable/playbutton"/>
+
+        <ImageView
+            android:layout_width="1in"
+            android:layout_height="50dp"
+            android:src="@drawable/musicbridge"
+            android:layout_marginStart="100dp"/>
 
     </FrameLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
