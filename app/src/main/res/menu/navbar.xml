@@ -5,10 +5,6 @@
         android:icon="@drawable/baseline_home_24"
         android:id="@+id/navHome"/>
 
-    <item android:title="NowPlaying"
-        android:icon="@drawable/baseline_play_arrow_24"
-        android:id="@+id/navPlay"/>
-
     <item android:title="Search"
         android:icon="@drawable/baseline_search_24"
         android:id="@+id/navSearch"/>
