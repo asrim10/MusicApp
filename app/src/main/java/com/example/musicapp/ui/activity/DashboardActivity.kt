@@ -41,6 +41,7 @@ class DashboardActivity : AppCompatActivity() {
             // it stores value of function
             when(it.itemId){
                 R.id.navHome->replaceFragment(HomeFragment())
+                R.id.navPlay-> replaceFragment(NowPlayingFragment())
                 R.id.navSearch->replaceFragment(SearchFragment())
                 R.id.navLib-> replaceFragment(LibraryFragment())
                 R.id.navProfile-> replaceFragment(ProfileFragment())
