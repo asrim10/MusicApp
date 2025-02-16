@@ -1,14 +1,225 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white_smoke"
     tools:context=".ui.fragment.ProfileFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="170dp"
+                    android:background="@drawable/half_rounded" />
+
+                <TextView
+                    android:id="@+id/textprofile"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="8dp"
+                    android:text="Profile"
+                    android:textColor="@color/white"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <View
+                    android:layout_width="30dp"
+                    android:layout_height="5dp"
+                    android:layout_below="@id/textprofile"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="4dp"
+                    android:background="@color/white" />
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/profileImg"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="80dp"
+                    android:layout_marginEnd="15dp"
+                    android:layout_marginBottom="10dp"
+                    android:elevation="10dp"
+                    android:src="@drawable/ic_avatar"
+                    app:civ_border_color="@color/white"
+                    app:civ_border_width="3dp" />
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:elevation="50dp"
+                android:orientation="vertical"
+                android:layout_margin="20dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingStart="20dp"
+                    android:paddingTop="20dp"
+                    android:paddingEnd="20dp"
+                    android:paddingBottom="10dp">
+
+
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/ic_gmail" />
+
+                    <TextView
+                        android:id="@+id/gmailDetail"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="6dp"
+                        android:text="abc@gmail.com"
+                        android:textSize="18sp" />
+
+                </LinearLayout>
+
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:background="@color/light_gray" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingStart="20dp"
+                    android:paddingTop="20dp"
+                    android:paddingEnd="20dp"
+                    android:paddingBottom="10dp">
+
+
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/baseline_home_24" />
+
+                    <TextView
+                        android:id="@+id/homeDetail"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="6dp"
+                        android:text="flat, house, country"
+                        android:textSize="18sp" />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:background="@color/light_gray" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingStart="20dp"
+                    android:paddingTop="20dp"
+                    android:paddingEnd="20dp"
+                    android:paddingBottom="10dp">
+
+
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/baseline_phone_24" />
+
+                    <TextView
+                        android:id="@+id/contactDetail"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="6dp"
+                        android:text="+977-1231231456"
+                        android:textSize="18sp" />
+
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/editProfile"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Edit Profile"
+                    android:textAllCaps="false"
+                    android:textColor="@color/black"
+                    android:background="@android:color/transparent"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_margin="20dp"
+                android:elevation="50dp"
+                android:background="@color/white">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingStart="20dp"
+                    android:paddingTop="20dp"
+                    android:paddingEnd="20dp"
+                    android:paddingBottom="10dp">
+
+
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/baseline_lock_24" />
+
+                    <EditText
+                        android:id="@+id/passwordLog"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="6dp"
+                        android:inputType="textPassword"
+                        android:text="password"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginBottom="12dp"
+                        android:background="@android:color/transparent"
+                        android:textSize="18sp" />
+
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/logout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Log out"
+                    android:textAllCaps="false"
+                    android:textColor="@color/black"
+                    android:background="@android:color/transparent"/>
+
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
 
 </FrameLayout>
