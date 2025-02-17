@@ -1,8 +1,10 @@
 package com.example.musicapp.ui.activity
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.widget.Toast
+import android.widget.VideoView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -18,15 +20,20 @@ class LoginActivity : AppCompatActivity() {
     lateinit var loadingUtils: LoadingUtils
     private lateinit var firebaseAuth: FirebaseAuth
 
+    lateinit var videoView : VideoView
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        videoView = binding.loginVid
         loadingUtils = LoadingUtils(this)
         firebaseAuth = FirebaseAuth.getInstance()
 
+        setupVideoBackground()
         binding.btnLogin.setOnClickListener {
             val email = binding.editEmail.text.toString()
             val password = binding.editPassword.text.toString()
@@ -82,5 +89,16 @@ class LoginActivity : AppCompatActivity() {
         val intent = Intent(this@LoginActivity, DashboardActivity::class.java) // Replace with your HomeActivity
         startActivity(intent)
         finish()
+    }
+    private fun setupVideoBackground() {
+        val videoPath = "android.resource://$packageName/${R.raw.space}"
+        val uri = Uri.parse(videoPath)
+        videoView.setVideoURI(uri)
+
+        // Disable controls & make it loop
+        videoView.setOnPreparedListener { mp ->
+            mp.isLooping = true
+            videoView.start()
+        }
     }
 }
