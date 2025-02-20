@@ -7,7 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.musicapp.R
-import com.example.musicapp.ui.activity.AddSongActivity // Import your AddSongActivity
+import com.example.musicapp.ui.activity.AddSongActivity
 import androidx.cardview.widget.CardView
 import com.example.musicapp.ui.activity.PlaylistActivity
 
