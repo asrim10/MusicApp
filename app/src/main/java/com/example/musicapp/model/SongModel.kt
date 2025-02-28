@@ -5,10 +5,10 @@ import android.os.Parcelable
 
 data class SongModel(
     var songId: String = "",
-    var title: String,
-    var artist: String,
-    var imageUrl: String,
-    var audioUrl : String
+    var title: String = "",
+    var artist: String = "",
+    var imageUrl: String = "",
+    var audioUrl : String = ""
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readString() ?:"",
