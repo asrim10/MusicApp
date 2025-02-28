@@ -30,12 +30,6 @@ class HomeFragment : Fragment() {
         songRecyclerView = view.findViewById(R.id.songList)
         songRecyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-        // Adding sample songs
-        songList.add(SongModel("Blinding Lights", "The Weeknd", R.drawable.music))
-        songList.add(SongModel("Shape of You", "Ed Sheeran", R.drawable.music))
-        songList.add(SongModel("Levitating", "Dua Lipa", R.drawable.music))
-        songList.add(SongModel("Save Your Tears", "The Weeknd", R.drawable.music))
-
         songAdapter = SongAdapter(songList)
         songRecyclerView.adapter = songAdapter
     }

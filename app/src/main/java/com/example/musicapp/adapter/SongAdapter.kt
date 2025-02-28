@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.musicapp.R
 import com.example.musicapp.model.SongModel
+import com.squareup.picasso.Picasso
 
 class SongAdapter(private val songList: List<SongModel>) : RecyclerView.Adapter<SongAdapter.SongViewHolder>() {
 
@@ -27,8 +28,15 @@ class SongAdapter(private val songList: List<SongModel>) : RecyclerView.Adapter<
         val song = songList[position]
         holder.songTitle.text = song.title
         holder.songArtist.text = song.artist
-        holder.songImage.setImageResource(song.imageResId) // Set album art
+
+        // Load image from URL using Picasso
+        Picasso.get()
+            .load(song.imageUrl)
+            .placeholder(R.drawable.placeholder_image) // Optional placeholder
+            .error(R.drawable.error_image) // Optional error fallback
+            .into(holder.songImage)
     }
+
 
     override fun getItemCount(): Int = songList.size
 }

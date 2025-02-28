@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".ui.activity.AddSongActivity">
+    tools:context=".ui.activity.">
 
     <EditText
         android:id="@+id/editSongTitle"
@@ -34,6 +34,19 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Select Image" />
+
+    <Button
+        android:id="@+id/btnSelectAudio"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Select Audio" />
+
+    <TextView
+        android:id="@+id/tvSelectedAudio"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="No audio selected"
+        android:padding="8dp" />
 
     <Button
         android:id="@+id/btnAddSong"
