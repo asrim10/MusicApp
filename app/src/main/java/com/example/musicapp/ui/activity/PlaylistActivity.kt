@@ -1,31 +1,50 @@
 package com.example.musicapp.ui.activity
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import com.example.musicapp.R
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.musicapp.adapter.PlaylistAdapter
 import com.example.musicapp.databinding.ActivityPlaylistBinding
+import com.example.musicapp.model.PlaylistModel
+import com.example.musicapp.repository.PlaylistRepositoryImpl
 
 class PlaylistActivity : AppCompatActivity() {
 
-    lateinit var binding: ActivityPlaylistBinding
+    private lateinit var binding: ActivityPlaylistBinding
+    private lateinit var adapter: PlaylistAdapter
+    private val repository = PlaylistRepositoryImpl()
+    private val playlists = ArrayList<PlaylistModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
-
-        binding = ActivityPlaylistBinding.inflate(layoutInflater)
-
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
+        binding = ActivityPlaylistBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // Initialize RecyclerView
+        adapter = PlaylistAdapter(this, playlists)
+        binding.recycler.layoutManager = LinearLayoutManager(this)
+        binding.recycler.adapter = adapter
 
+        // Floating Button to Add Playlist
+        binding.floatingAddPlaylist.setOnClickListener {
+            val intent = Intent(this, AddPlaylistActivity::class.java)
+            startActivity(intent)
+        }
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
+        fetchPlaylists()
+    }
+
+    private fun fetchPlaylists() {
+        repository.getAllPlaylist { fetchedPlaylists, success, _ ->
+            if (success && fetchedPlaylists != null) {
+                playlists.clear()
+                playlists.addAll(fetchedPlaylists)
+                adapter.notifyDataSetChanged()
+            }
         }
     }
 }

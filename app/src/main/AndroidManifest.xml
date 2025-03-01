@@ -10,13 +10,19 @@
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
-        tools:replace="android:fullBackupContent"
         android:icon="@drawable/musicicon"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/musicplayericon_round"
         android:supportsRtl="true"
         android:theme="@style/Base.Theme.MusicApp"
+        tools:replace="android:fullBackupContent"
         tools:targetApi="31">
+        <activity
+            android:name=".ui.activity.UpdatePlaylistActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.activity.AddPlaylistActivity"
+            android:exported="false" />
         <activity
             android:name=".ui.activity.PlayerActivity"
             android:exported="false" />

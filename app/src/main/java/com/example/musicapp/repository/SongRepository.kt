@@ -22,6 +22,10 @@ interface SongRepository {
 
     fun deleteSong(songId: String, callback: (Boolean) -> Unit)
 
+    fun getSongById(productId:String,
+                       callback: (SongModel?, Boolean,
+                                  String) -> Unit)
+
     fun getAllSongs(callback: (List<SongModel>) -> Unit)
 
     fun uploadImage(context: Context, imageUri: Uri, callback: (String?) -> Unit)

@@ -11,7 +11,6 @@ import com.cloudinary.Cloudinary
 import com.cloudinary.utils.ObjectUtils
 import com.example.musicapp.model.SongModel
 import com.google.firebase.database.*
-import java.io.File
 import java.io.InputStream
 import java.util.concurrent.Executors
 
@@ -102,6 +101,24 @@ class SongRepositoryImpl : SongRepository {
         songsRef.child(songId).removeValue()
             .addOnSuccessListener { callback(true) }
             .addOnFailureListener { callback(false) }
+    }
+
+    override fun getSongById(productId: String, callback: (SongModel?, Boolean, String) -> Unit) {
+        songsRef.child(productId)
+            .addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    if (snapshot.exists()) {
+                        var model = snapshot.getValue(SongModel::class.java)
+                        callback(model, true, "Data fetched")
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    callback(null, false, error.message.toString())
+                }
+
+            })
+
     }
 
     override fun uploadImage(context: Context, imageUri: Uri, callback: (String?) -> Unit) {
