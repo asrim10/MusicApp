@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
 
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -17,6 +18,12 @@
         android:theme="@style/Base.Theme.MusicApp"
         tools:replace="android:fullBackupContent"
         tools:targetApi="31">
+
+        <service
+            android:name=".service.MediaPlayerService"
+            android:enabled="true"
+            android:exported="false" />
+
         <activity
             android:name=".ui.activity.UpdatePlaylistActivity"
             android:exported="false" />
