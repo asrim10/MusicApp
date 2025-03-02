@@ -8,43 +8,58 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.musicapp.R
 import com.example.musicapp.adapter.SongAdapter
+import com.example.musicapp.databinding.FragmentHomeBinding
 import com.example.musicapp.model.SongModel
+import com.example.musicapp.viewModel.MediaPlayerViewModel
 import com.google.firebase.database.*
 
 class HomeFragment : Fragment() {
 
-    private lateinit var songRecyclerView: RecyclerView
+    private var _binding: FragmentHomeBinding? = null
+    private val binding get() = _binding!!
+
     private lateinit var songAdapter: SongAdapter
     private val songList = mutableListOf<SongModel>()
     private lateinit var databaseRef: DatabaseReference
     private var mediaPlayer: MediaPlayer? = null
+    private val mediaPlayerViewModel: MediaPlayerViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_home, container, false)
+    ): View {
+        _binding = FragmentHomeBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        songRecyclerView = view.findViewById(R.id.songList)
-        songRecyclerView.layoutManager = LinearLayoutManager(requireContext())
-
+        // Setup RecyclerView
+        binding.songList.layoutManager = LinearLayoutManager(requireContext())
         songAdapter = SongAdapter(songList) { song ->
-            playAudio(song.audioUrl) // Play audio when song is clicked
+            playAudio(song)
         }
-        songRecyclerView.adapter = songAdapter
+        binding.songList.adapter = songAdapter
 
+        // Setup Firebase database reference
         databaseRef = FirebaseDatabase.getInstance().getReference("songs")
         fetchSongsFromDatabase()
         attachSwipeToDelete()
+
+        // Observe MediaPlayer status from ViewModel
+        mediaPlayerViewModel.isPlaying.observe(viewLifecycleOwner) { isPlaying ->
+            if (isPlaying) {
+                mediaPlayer?.start()
+            } else {
+                mediaPlayer?.pause()
+            }
+        }
     }
 
     private fun fetchSongsFromDatabase() {
@@ -55,7 +70,7 @@ class HomeFragment : Fragment() {
                     val song = songSnapshot.getValue(SongModel::class.java)
                     song?.let { songList.add(it) }
                 }
-                songAdapter.notifyDataSetChanged() // Refresh RecyclerView
+                songAdapter.notifyDataSetChanged()
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -64,22 +79,31 @@ class HomeFragment : Fragment() {
         })
     }
 
-    private fun playAudio(audioUrl: String?) {
-        if (audioUrl.isNullOrEmpty()) {
+    private fun playAudio(song: SongModel) {
+        mediaPlayerViewModel.setCurrentSong(song)
+
+        if (song.audioUrl.isNullOrEmpty()) {
             Toast.makeText(requireContext(), "Audio URL is missing", Toast.LENGTH_SHORT).show()
             return
         }
 
-        mediaPlayer?.release() // Stop previous audio if playing
+        mediaPlayer?.release()
         mediaPlayer = MediaPlayer().apply {
             setAudioStreamType(AudioManager.STREAM_MUSIC)
-            setDataSource(audioUrl)
+            setDataSource(song.audioUrl)
             prepareAsync()
-            setOnPreparedListener { start() }
-            setOnCompletionListener { release() }
+            setOnPreparedListener {
+                start()
+                mediaPlayerViewModel.setPlayingStatus(true)
+            }
+            setOnCompletionListener {
+                release()
+                mediaPlayerViewModel.setPlayingStatus(false)
+            }
             setOnErrorListener { _, _, _ ->
                 Toast.makeText(requireContext(), "Error playing audio", Toast.LENGTH_SHORT).show()
                 release()
+                mediaPlayerViewModel.setPlayingStatus(false)
                 false
             }
         }
@@ -97,23 +121,35 @@ class HomeFragment : Fragment() {
                 val position = viewHolder.adapterPosition
                 val songToDelete = songList[position]
 
-                databaseRef.child(songToDelete.songId).removeValue().addOnSuccessListener {
+                if (songToDelete.songId.isNullOrEmpty()) {
+                    Toast.makeText(requireContext(), "Error: Song ID is missing", Toast.LENGTH_SHORT).show()
+                    songAdapter.notifyItemChanged(position)
+                    return
+                }
+
+                databaseRef.child(songToDelete.songId!!).removeValue().addOnSuccessListener {
                     songList.removeAt(position)
                     songAdapter.notifyItemRemoved(position)
                     Toast.makeText(requireContext(), "Song deleted", Toast.LENGTH_SHORT).show()
                 }.addOnFailureListener {
                     Toast.makeText(requireContext(), "Failed to delete song", Toast.LENGTH_SHORT).show()
-                    songAdapter.notifyItemChanged(position) // Restore item if deletion fails
+                    songAdapter.notifyItemChanged(position)
                 }
             }
         }
 
         val itemTouchHelper = ItemTouchHelper(itemTouchHelperCallback)
-        itemTouchHelper.attachToRecyclerView(songRecyclerView)
+        itemTouchHelper.attachToRecyclerView(binding.songList)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null // Avoid memory leaks
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        mediaPlayer?.release() // Release media player when fragment is destroyed
+        mediaPlayer?.release()
+        mediaPlayerViewModel.setPlayingStatus(false)
     }
 }

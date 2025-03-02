@@ -57,4 +57,8 @@ dependencies {
     implementation ("de.hdodenhof:circleimageview:3.1.0")
     implementation ("com.squareup.picasso:picasso:2.8")
     implementation("com.cloudinary:cloudinary-android:3.0.2")
+    implementation ("androidx.fragment:fragment-ktx:1.6.2")
+    implementation ("com.github.bumptech.glide:glide:4.16.0")
+
+
 }
