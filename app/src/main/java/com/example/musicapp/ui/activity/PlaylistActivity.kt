@@ -2,6 +2,8 @@ package com.example.musicapp.ui.activity
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -39,11 +41,20 @@ class PlaylistActivity : AppCompatActivity() {
     }
 
     private fun fetchPlaylists() {
+        // Show ProgressBar while loading
+        binding.progressBar.visibility = View.VISIBLE
+
         repository.getAllPlaylist { fetchedPlaylists, success, _ ->
+            // Hide ProgressBar after loading is complete
+            binding.progressBar.visibility = View.GONE
+
             if (success && fetchedPlaylists != null) {
                 playlists.clear()
                 playlists.addAll(fetchedPlaylists)
                 adapter.notifyDataSetChanged()
+            } else {
+                // Optionally show a toast or handle error here
+                Toast.makeText(this, "Failed to fetch playlists", Toast.LENGTH_SHORT).show()
             }
         }
     }

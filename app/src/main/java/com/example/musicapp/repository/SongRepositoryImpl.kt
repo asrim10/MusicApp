@@ -68,8 +68,17 @@ class SongRepositoryImpl : SongRepository {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val songList = mutableListOf<SongModel>()
                 for (songSnapshot in snapshot.children) {
-                    val song = songSnapshot.getValue(SongModel::class.java)
-                    song?.let { songList.add(it) }
+                    try {
+                        // Attempt to get SongModel from Firebase
+                        val song = songSnapshot.getValue(SongModel::class.java)
+                        if (song != null) {
+                            songList.add(song)
+                        } else {
+                            Log.e("Firebase", "Failed to deserialize song: ${songSnapshot.value}")
+                        }
+                    } catch (e: Exception) {
+                        Log.e("Firebase", "Error deserializing song: ${e.message}")
+                    }
                 }
                 callback(songList)
             }
@@ -80,6 +89,8 @@ class SongRepositoryImpl : SongRepository {
             }
         })
     }
+
+
 
     override fun updateSong(
         songId: String,

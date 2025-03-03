@@ -17,23 +17,20 @@ import com.squareup.picasso.Picasso
 import java.lang.Exception
 import java.util.ArrayList
 
-class PlaylistAdapter(val context: Context,
-                     var data : ArrayList<PlaylistModel>) : RecyclerView.Adapter<PlaylistAdapter.PlaylistViewHolder>(){
+class PlaylistAdapter(val context: Context, var data: ArrayList<PlaylistModel>) :
+    RecyclerView.Adapter<PlaylistAdapter.PlaylistViewHolder>() {
 
-    class PlaylistViewHolder(itemView: View)
-        : RecyclerView.ViewHolder(itemView){
-
-        val imageView : ImageView = itemView.findViewById(R.id.getImage)
-        val loading : ProgressBar = itemView.findViewById(R.id.progressBar2)
-        val editButton : TextView = itemView.findViewById(R.id.lblEdit)
-        val pName : TextView = itemView.findViewById(R.id.displayName)
-        val pDesc : TextView = itemView.findViewById(R.id.displayDesc)
+    class PlaylistViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val imageView: ImageView = itemView.findViewById(R.id.getImage)
+        val loading: ProgressBar = itemView.findViewById(R.id.progressBar2)
+        val editButton: TextView = itemView.findViewById(R.id.lblEdit)
+        val pName: TextView = itemView.findViewById(R.id.displayName)
+        val pDesc: TextView = itemView.findViewById(R.id.displayDesc)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlaylistViewHolder {
-        val itemView : View = LayoutInflater.from(context).
-        inflate(R.layout.playlist_layout,parent,false)
-
+        val itemView: View = LayoutInflater.from(context)
+            .inflate(R.layout.playlist_layout, parent, false)
         return PlaylistViewHolder(itemView)
     }
 
@@ -42,41 +39,29 @@ class PlaylistAdapter(val context: Context,
     }
 
     override fun onBindViewHolder(holder: PlaylistViewHolder, position: Int) {
-        holder.pName.text = data[position].playlistName
-        holder.pDesc.text = data[position].playlistDesc
+        val playlist = data[position]
 
-        Picasso.get().load(data[position].playlistImageUrl).into(holder.imageView,object:Callback{
+        holder.pName.text = playlist.playlistName
+        holder.pDesc.text = playlist.playlistDesc
+
+        Picasso.get().load(playlist.playlistImageUrl).into(holder.imageView, object : Callback {
             override fun onSuccess() {
                 holder.loading.visibility = View.GONE
             }
 
-            override fun onError(e: Exception?) {
-
-            }
-
+            override fun onError(e: Exception?) {}
         })
 
-
         holder.editButton.setOnClickListener {
-            val intent = Intent(context,UpdatePlaylistActivity::class.java)
-//            if model pass garnu paryo bhane
-//            first make model parcelable
-//            intent.putExtra("products",data[position])
-
-            intent.putExtra("playlistId",data[position].playlistId)
-
+            val intent = Intent(context, UpdatePlaylistActivity::class.java)
+            intent.putExtra("playlist", playlist) // Pass entire PlaylistModel
             context.startActivity(intent)
         }
     }
 
-    fun updateData(products: List<PlaylistModel>){
+    fun updateData(newPlaylists: List<PlaylistModel>) {
         data.clear()
-        data.addAll(products)
+        data.addAll(newPlaylists)
         notifyDataSetChanged()
     }
-
-    fun getProductId(position: Int) : String{
-        return data[position].playlistId
-    }
-
 }
