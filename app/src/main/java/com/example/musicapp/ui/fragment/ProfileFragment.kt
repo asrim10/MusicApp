@@ -1,60 +1,101 @@
 package com.example.musicapp.ui.fragment
 
+import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.*
+import androidx.fragment.app.Fragment
+import androidx.appcompat.app.AlertDialog
 import com.example.musicapp.R
+import com.example.musicapp.repository.UserRepository
+import com.example.musicapp.repository.UserRepositoryImpl
+import com.example.musicapp.model.UserModel
+import com.example.musicapp.ui.activity.LoginActivity
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [ProfileFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class ProfileFragment : Fragment() {
-    // TODO: Rename and change types of parameters
+
     private var param1: String? = null
     private var param2: String? = null
+    private lateinit var userRepository: UserRepository
+    private lateinit var gmailDetailText: TextView
+    private lateinit var homeDetailText: TextView
+    private lateinit var contactDetailText: TextView
+    private lateinit var logoutButton: Button
+    private lateinit var editProfileButton: Button
+    private lateinit var passwordLogEditText: EditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
+        userRepository = UserRepositoryImpl()
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_profile, container, false)
-    }
+        val view = inflater.inflate(R.layout.fragment_profile, container, false)
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment ProfileFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            ProfileFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+        // Initialize views
+        gmailDetailText = view.findViewById(R.id.gmailDetail)
+        homeDetailText = view.findViewById(R.id.homeDetail)
+        contactDetailText = view.findViewById(R.id.contactDetail)
+        logoutButton = view.findViewById(R.id.logout)
+        editProfileButton = view.findViewById(R.id.editProfile)
+        passwordLogEditText = view.findViewById(R.id.passwordLog)
+
+        // Fetch user data from Firebase
+        val currentUser = userRepository.getCurrentUser()
+        if (currentUser != null) {
+            userRepository.getUSerFromDatabase(currentUser.uid) { user, success, message ->
+                if (success && user != null) {
+                    // Set Gmail, Home, and Contact details
+                    gmailDetailText.text = user.email
+                    homeDetailText.text = user.homeAddress ?: ""
+                    contactDetailText.text = user.phoneNumber ?: ""
+                } else {
+                    // Handle errors if necessary
+                    showToast(message)
                 }
             }
+        }
+
+        // Implement logout with password validation
+        logoutButton.setOnClickListener {
+            val password = passwordLogEditText.text.toString()
+
+            if (password.isNotEmpty()) {
+                val currentUser = userRepository.getCurrentUser()
+                if (currentUser != null) {
+                    // Try logging in with the entered password
+                    userRepository.login(currentUser.email ?: "", password) { success, message ->
+                        if (success) {
+                            // If login is successful, perform logout
+                            userRepository.logout { loggedOut, logoutMessage ->
+                                if (loggedOut) {
+                                    // Redirect to login page after logout
+                                    startActivity(Intent(requireContext(), LoginActivity::class.java))
+                                    requireActivity().finish()
+                                } else {
+                                    showToast(logoutMessage)
+                                }
+                            }
+                        } else {
+                            // Show toast message if password is incorrect
+                            showToast(message)
+                        }
+                    }
+                }
+            } else {
+                showToast("Please enter your password")
+            }
+        }
+
+        return view
+    }
+
+    private fun showToast(message: String) {
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
     }
 }
