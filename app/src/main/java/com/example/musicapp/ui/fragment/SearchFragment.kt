@@ -1,60 +1,83 @@
 package com.example.musicapp.ui.fragment
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.example.musicapp.R
+import android.widget.Toast
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.musicapp.adapter.SongAdapter
+import com.example.musicapp.databinding.FragmentSearchBinding
+import com.example.musicapp.model.SongModel
+import com.google.firebase.database.*
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [SearchFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class SearchFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    private lateinit var binding: FragmentSearchBinding
+    private lateinit var songAdapter: SongAdapter
+    private val songList = mutableListOf<SongModel>()
+    private lateinit var databaseRef: DatabaseReference
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_search, container, false)
-    }
+        // Inflate the layout using ViewBinding
+        binding = FragmentSearchBinding.inflate(inflater, container, false)
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment SearchFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            SearchFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+        // Set up RecyclerView
+        binding.searchResultsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+        songAdapter = SongAdapter(songList) { song ->
+            // Handle song selection here (e.g., play song)
+        }
+        binding.searchResultsRecyclerView.adapter = songAdapter
+
+        // Initialize Firebase Database reference
+        databaseRef = FirebaseDatabase.getInstance().getReference("songs")
+
+        // Add text change listener for search input
+        binding.searchInput.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                if (s != null) {
+                    searchSongs(s.toString())
                 }
             }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+        })
+
+        return binding.root
+    }
+
+    private fun searchSongs(query: String) {
+        if (query.isEmpty()) {
+            songList.clear()
+            songAdapter.notifyDataSetChanged()
+            return
+        }
+
+        // Query Firebase Database for songs
+        databaseRef.orderByChild("title")
+            .startAt(query)
+            .endAt(query + "\uf8ff")
+            .addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    songList.clear()
+                    for (songSnapshot in snapshot.children) {
+                        val song = songSnapshot.getValue(SongModel::class.java)
+                        song?.let { songList.add(it) }
+                    }
+                    songAdapter.notifyDataSetChanged()  // Update adapter
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    Toast.makeText(requireContext(), "Error: ${error.message}", Toast.LENGTH_SHORT).show()
+                }
+            })
     }
 }

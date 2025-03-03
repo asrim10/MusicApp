@@ -119,6 +119,12 @@ class HomeFragment : Fragment() {
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val position = viewHolder.adapterPosition
+
+                // Ensure the position is valid and the list is not empty
+                if (position == RecyclerView.NO_POSITION || position >= songList.size || songList.isEmpty()) {
+                    return // Ignore invalid position or if the list is empty
+                }
+
                 val songToDelete = songList[position]
 
                 if (songToDelete.songId.isNullOrEmpty()) {
@@ -127,6 +133,7 @@ class HomeFragment : Fragment() {
                     return
                 }
 
+                // Delete song from Firebase and the list
                 databaseRef.child(songToDelete.songId!!).removeValue().addOnSuccessListener {
                     songList.removeAt(position)
                     songAdapter.notifyItemRemoved(position)
@@ -141,6 +148,7 @@ class HomeFragment : Fragment() {
         val itemTouchHelper = ItemTouchHelper(itemTouchHelperCallback)
         itemTouchHelper.attachToRecyclerView(binding.songList)
     }
+
 
     override fun onDestroyView() {
         super.onDestroyView()
