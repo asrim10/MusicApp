@@ -18,10 +18,17 @@ class MediaPlayerService : Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         val song = intent?.getParcelableExtra<SongModel>("song")
         val action = intent?.getStringExtra("action")
-        if (action == "play" && song != null) {
-            playSong(song)
-        } else if (action == "pause") {
-            pauseSong()
+
+        when (action) {
+            "play" -> {
+                song?.let { playSong(it) }
+            }
+            "pause" -> {
+                pauseSong()
+            }
+            "stop" -> {
+                stopSong()
+            }
         }
 
         return START_STICKY
@@ -49,8 +56,18 @@ class MediaPlayerService : Service() {
         mediaPlayer?.pause()
     }
 
+    private fun stopSong() {
+        mediaPlayer?.apply {
+            stop()
+            release()
+        }
+        mediaPlayer = null
+        currentSong = null
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         mediaPlayer?.release()
+        mediaPlayer = null
     }
 }

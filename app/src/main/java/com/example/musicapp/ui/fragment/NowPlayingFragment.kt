@@ -85,14 +85,23 @@ class NowPlayingFragment : Fragment() {
     }
 
     private fun playSong(song: SongModel) {
+        // Stop any currently playing song before starting the new one
+        val stopIntent = Intent(requireContext(), MediaPlayerService::class.java).apply {
+            putExtra("action", "stop")
+        }
+        requireContext().startService(stopIntent)
+
+        // Now play the new song
         val playIntent = Intent(requireContext(), MediaPlayerService::class.java).apply {
             putExtra("song", song)
             putExtra("action", "play")
         }
         requireContext().startService(playIntent)
+
         isPlaying = true
         playPauseBtn.setBackgroundResource(R.drawable.baseline_pause_24) // Update icon to Pause
     }
+
 
     private fun pauseSong() {
         val pauseIntent = Intent(requireContext(), MediaPlayerService::class.java).apply {
