@@ -45,6 +45,7 @@ class NowPlayingFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+
         // Initialize Views
         songImageNP = view.findViewById(R.id.songImgNP)
         songTitleNP = view.findViewById(R.id.songNameNP)
@@ -78,10 +79,14 @@ class NowPlayingFragment : Fragment() {
         }
 
         // Open PlayerActivity when Now Playing frame is clicked
+        // Inside NowPlayingFragment, when the user taps on the Now Playing section
         nowPlayingLayout.setOnClickListener {
-            val intent = Intent(requireContext(), PlayerActivity::class.java)
+            val intent = Intent(requireContext(), PlayerActivity::class.java).apply {
+                putExtra("song", mediaPlayerViewModel.currentSong.value)  // Passing the current song
+            }
             startActivity(intent)
         }
+
     }
 
     private fun playSong(song: SongModel) {
